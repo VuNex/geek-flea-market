@@ -1,0 +1,110 @@
+extends layout
+
+block content
+  .breadcrumb
+    a(href="/adverts") ← Назад к списку
+  
+  .advert-detail-grid
+    //- Левая колонка: Информация об объявлении и Фото
+    .detail-main
+      .card
+        .badge-status(class=`status-${advert.status}`)= advert.status
+        h1= advert.title
+        .price-tag= advert.price.toLocaleString() + ' ₸'
+        
+        .section-box
+          h3 Описание
+          p.advert-text= advert.description
+        
+        .section-box
+          h3 Характеристики
+          ul.spec-list
+            li: strong ID: 
+              span= advert.id
+            li: strong Категория: 
+              span= advert.category ? advert.category.name : '—'
+            li: strong Просмотры: 
+              span= advert.views
+            li: strong Дата создания: 
+              span= new Date(advert.createdAt).toLocaleString('ru-RU')
+
+        if advert.photos && advert.photos.length > 0
+          .section-box
+            h3 Фотографии
+            .photo-grid
+              each photo in advert.photos.sort((a, b) => a.order - b.order)
+                .photo-item
+                  img(src=photo.url alt=advert.title)
+
+    //- Правая колонка: Автор, Модерация, Услуги
+    .detail-sidebar
+      //- Блок Автора
+      .card
+        h3 Автор
+        .author-info
+          if advert.user
+            p: strong Имя: 
+              span= advert.user.name
+            p: strong ID: 
+              span= advert.user.id
+            p: strong Телефон: 
+              span= advert.user.phone || '—'
+            p: strong Email: 
+              span= advert.user.email || '—'
+          else
+            p.text-muted Данные автора недоступны
+
+      //- Управление статусом (Модерация)
+      .card
+        h3 Модерация
+        .status-actions
+          if advert.status === 'moderation'
+            .btn-group-vertical
+              form(action=`/adverts/${advert.id}/status` method="POST")
+                input(type="hidden" name="status" value="published")
+                button.btn-primary.btn-block(type="submit") ✅ Опубликовать
+              
+              form(action=`/adverts/${advert.id}/status` method="POST")
+                input(type="hidden" name="status" value="rejected")
+                button.btn-danger.btn-outline.btn-block(type="submit") ❌ Отклонить
+          
+          else if advert.status === 'published'
+            form(action=`/adverts/${advert.id}/status` method="POST")
+              input(type="hidden" name="status" value="rejected")
+              button.btn-danger.btn-block(type="submit") ❌ Снять с публикации (В архив)
+          
+          else if advert.status === 'rejected'
+            p.text-muted.text-center Объявление в архиве. Действия недоступны.
+
+      //- Платные услуги
+      .card
+        h3 Платные услуги
+        .billing-list
+          if billing && billing.length > 0
+            table.table.table-sm
+              thead
+                tr
+                  th Услуга
+                  th Статус
+                  th Действие
+              tbody
+                each service in billing
+                  tr
+                    td
+                      .service-type= service.type
+                      .service-dates.text-muted
+                        small До #{new Date(service.expiresAt).toLocaleDateString()}
+                    td
+                      if service.isActive
+                        span.text-success Активна
+                      else
+                        span.text-muted Выкл
+                    td
+                      form(action=`/adverts/${advert.id}/services/${service.id}` method="POST")
+                        input(type="hidden" name="isActive" value=String(!service.isActive))
+                        if service.isActive
+                          button.btn-link.text-danger(type="submit") Откл
+                        else
+                          button.btn-link.text-success(type="submit") Вкл
+          else
+            p.text-muted.text-center Нет подключенных услуг

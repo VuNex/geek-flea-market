@@ -1,0 +1,3 @@
+id,name,phone,email,role,passwordPlainText
+1,Admin,77771234567,admin@gfm.test,moderator,admin123
+2,User1,77770000001,user1@gfm.test,user,user123

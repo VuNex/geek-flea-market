@@ -1,0 +1,57 @@
+extends layout
+
+block content
+  .dashboard-header
+    h1 Добро пожаловать, #{user.name}!
+    p.text-muted Вы вошли в систему как администратор.
+
+  .stats-grid
+    .stats-card
+      .stats-icon.icon-moderation
+        span.material-icons update
+      .stats-info
+        span.stats-label На модерации
+        span.stats-value= stats.counters.moderation
+    
+    .stats-card
+      .stats-icon.icon-published
+        span.material-icons check_circle
+      .stats-info
+        span.stats-label Опубликовано
+        span.stats-value= stats.counters.published
+
+    .stats-card
+      .stats-icon.icon-rejected
+        span.material-icons cancel
+      .stats-info
+        span.stats-label Отклонено
+        span.stats-value= stats.counters.rejected
+
+    .stats-card
+      .stats-icon.icon-users
+        span.material-icons people
+      .stats-info
+        span.stats-label Пользователей
+        span.stats-value= stats.counters.users
+
+  .section-container
+    h2 ТОП-10 по просмотрам
+    .table-responsive
+      table.table
+        thead
+          tr
+            th Заголовок
+            th Категория
+            th Цена
+            th Просмотры
+        tbody
+          if stats.topAdverts && stats.topAdverts.length > 0
+            each advert in stats.topAdverts
+              tr
+                td: a(href=`/adverts/${advert.id}`)= advert.title
+                td= advert.category ? advert.category.name : '—'
+                td= advert.price.toLocaleString() + ' ₸'
+                td: span.badge.badge-views= advert.views
+          else
+            tr
+              td(colspan="4" class="text-center") Данные отсутствуют

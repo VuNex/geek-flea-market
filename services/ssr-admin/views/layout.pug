@@ -1,0 +1,52 @@
+doctype html
+html(lang="ru")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Geek Flea Market | Админ-панель
+    link(rel="stylesheet" href="/style.css")
+    link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
+  body
+    header.main-header
+      .container
+        nav.nav-menu
+          a.nav-logo(href="/") 
+            span.material-icons(style="vertical-align: middle; margin-right: 8px;") admin_panel_settings
+            | GFM Admin
+          ul.nav-links
+            li
+              a(href="/")
+                span.material-icons.nav-icon dashboard
+                | Дашборд
+            li
+              a(href="/categories")
+                span.material-icons.nav-icon category
+                | Категории
+            li
+              a(href="/adverts")
+                span.material-icons.nav-icon list_alt
+                | Объявления
+            li
+              a(href="/users")
+                span.material-icons.nav-icon group
+                | Пользователи
+            li
+              form(action="/logout" method="POST" style="display: inline;")
+                button.btn-logout-nav(type="submit")
+                  span.material-icons.nav-icon logout
+                  | Выйти
+        
+    main.main-content
+      .container
+        //- Блок уведомлений (Flash messages)
+        if flashError
+          .alert.alert-error= flashError
+        if flashSuccess
+          .alert.alert-success= flashSuccess
+        
+        //- Точка вставки контента конкретной страницы
+        block content
+
+    footer.main-footer
+      .container
+        p &copy; 2024 Geek Flea Market. Панель администратора.

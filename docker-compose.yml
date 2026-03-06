@@ -1,0 +1,119 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: geekflea
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  gateway-service:
+    build: ./services/gateway-service
+    ports:
+      - "3010:3010"
+    environment:
+      - PORT=3010
+      - JWT_SECRET=supersecret
+      - AUTH_SERVICE_URL=http://auth-service:3001
+      - CATALOG_SERVICE_URL=http://catalog-service:3002
+      - BILLING_SERVICE_URL=http://billing-service:3003
+      - EXPORT_SERVICE_URL=http://export-service:3004
+      - DASHBOARD_SERVICE_URL=http://dashboard-service:3005
+    depends_on:
+      - auth-service
+      - catalog-service
+      - billing-service
+      - export-service
+      - dashboard-service
+
+  auth-service:
+    build: ./services/auth-service
+    environment:
+      - DATABASE_URL=postgres://user:pass@postgres:5432/geekflea
+      - DB_SCHEMA=auth
+      - JWT_SECRET=supersecret
+      - JWT_EXPIRES_IN=8h
+      - BCRYPT_ROUNDS=10
+      - PORT=3001
+    depends_on:
+      - postgres
+
+  catalog-service:
+    build: ./services/catalog-service
+    environment:
+      - DATABASE_URL=postgres://user:pass@postgres:5432/geekflea
+      - DB_SCHEMA=catalog
+      - PORT=3002
+    depends_on:
+      - postgres
+
+  billing-service:
+    build: ./services/billing-service
+    environment:
+      - DATABASE_URL=postgres://user:pass@postgres:5432/geekflea
+      - DB_SCHEMA=billing
+      - PORT=3003
+    depends_on:
+      - postgres
+
+  export-service:
+    build: ./services/export-service
+    environment:
+      - PORT=3004
+      - CATALOG_SERVICE_URL=http://catalog-service:3002
+      - AUTH_SERVICE_URL=http://auth-service:3001
+    depends_on:
+      - auth-service
+      - catalog-service
+
+  dashboard-service:
+    build: ./services/dashboard-service
+    environment:
+      - PORT=3005
+      - CATALOG_SERVICE_URL=http://catalog-service:3002
+      - AUTH_SERVICE_URL=http://auth-service:3001
+    depends_on:
+      - auth-service
+      - catalog-service
+
+  public-api:
+    build: ./services/public-api
+    environment:
+      - DATABASE_URL=postgres://user:pass@postgres:5432/geekflea
+      - DB_SCHEMA=public_api
+      - JWT_SECRET=supersecret
+      - JWT_EXPIRES_IN=8h
+      - BCRYPT_ROUNDS=10
+      - PORT=3006
+    depends_on:
+      - postgres
+
+  frontend-public:
+    build:
+      context: ./frontend-public
+      dockerfile: Dockerfile
+    container_name: gfm-public-frontend
+    ports:
+      - "5174:80"
+    depends_on:
+      - gateway-service
+      - public-api
+    restart: unless-stopped
+
+  ssr-admin:
+    build: ./services/ssr-admin
+    ports:
+      - "4000:4000"
+    env_file: ./services/ssr-admin/.env
+    depends_on:
+      - gateway-service
+      - postgres
+
+volumes:
+  pg_data:

@@ -1,0 +1,4 @@
+id,type,activatedAt,expiresAt,isActive,advertId
+1,highlight,2024-03-01,2024-04-01,true,1
+2,top,2024-03-05,2024-03-12,true,2
+3,highlight,2024-03-05,2024-04-05,false,5

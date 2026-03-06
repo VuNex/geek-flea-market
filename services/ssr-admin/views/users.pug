@@ -1,0 +1,38 @@
+extends layout
+
+block content
+  .section-header
+    h1 Пользователи
+    p.text-muted Просмотр и поиск зарегистрированных пользователей системы
+
+  .card
+    h2 Поиск пользователей
+    form.inline-form(action="/users" method="GET")
+      .form-group.search-group
+        input.form-control(type="text" name="search" value=search placeholder="Имя, телефон или email...")
+      button.btn-primary(type="submit") Найти
+      if search
+        a.btn-link(href="/users") Сбросить
+
+  .section-container
+    .table-responsive
+      table.table
+        thead
+          tr
+            th ID
+            th Имя
+            th Телефон
+            th Email
+            th Объявлений
+        tbody
+          if users && users.length > 0
+            each userItem in users
+              tr
+                td= userItem.id
+                td.font-bold= userItem.name
+                td= userItem.phone
+                td= userItem.email
+                td: span.badge= userItem.advertCount || 0
+          else
+            tr
+              td(colspan="5" class="text-center") Пользователи не найдены

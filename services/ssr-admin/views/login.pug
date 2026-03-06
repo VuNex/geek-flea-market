@@ -1,0 +1,26 @@
+doctype html
+html(lang="ru")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Вход | GFM Admin
+    link(rel="stylesheet" href="/style.css")
+  body.login-page
+    .login-container
+      .login-box
+        h1 GFM Admin
+        p.subtitle Панель управления торговой площадкой
+        
+        if flashError
+          .alert.alert-error= flashError
+
+        form(action="/login" method="POST")
+          .form-group
+            label(for="login") Логин (Email или Телефон)
+            input#login(type="text" name="login" required autofocus placeholder="admin@example.com")
+          
+          .form-group
+            label(for="password") Пароль
+            input#password(type="password" name="password" required placeholder="••••••••")
+          
+          button.btn-primary.btn-block(type="submit") Войти

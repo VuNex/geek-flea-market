@@ -1,0 +1,6 @@
+id,title,body,categoryId,authorId,price,status,views,createdAt
+1,Action Comics #1 (Репринт),Легендарный первый выпуск с Суперменом. Состояние 9.8.,1,2,5000,published,240,2024-01-10
+2,Gloomhaven: Мрачная гавань,Полное издание. Все компоненты на месте. Наклейки не использованы.,2,2,12000,published,115,2024-02-15
+3,Фигурка Geralt of Rivia (Dark Horse),Отличное состояние. Коробка вскрыта.,3,1,3500,published,89,2024-03-01
+4,GameBoy Color (Atomic Purple),Полностью рабочий. Родной корпус.,4,2,7000,moderation,42,2024-03-05
+5,D&D Player's Handbook (5th edition),Книга игрока на русском языке. Состояние новой.,5,1,2800,published,67,2024-03-05

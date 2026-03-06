@@ -1,0 +1,40 @@
+extends layout
+
+block content
+  .section-header
+    h1 Управление категориями
+    p.text-muted Здесь вы можете добавлять, изменять и удалять категории товаров.
+
+  .card
+    h2 Добавить новую категорию
+    form.inline-form(action="/categories" method="POST")
+      .form-group
+        input.form-control(type="text" name="name" required placeholder="Например: Электроника")
+      button.btn-primary(type="submit") Добавить
+
+  .section-container
+    h2 Список категорий
+    .table-responsive
+      table.table
+        thead
+          tr
+            th ID
+            th Название
+            th Объявлений
+            th.text-right Действия
+        tbody
+          if categories && categories.length > 0
+            each category in categories
+              tr
+                td= category.id
+                td
+                  form.inline-form(action=`/categories/${category.id}/edit` method="POST")
+                    input.form-control.form-control-sm(type="text" name="name" value=category.name required)
+                    button.btn-link(type="submit") Сохранить
+                td: span.badge= category.advertCount || 0
+                td.text-right
+                  form(action=`/categories/${category.id}/delete` method="POST" onsubmit="return confirm('Вы уверены? Это действие нельзя отменить.')")
+                    button.btn-danger.btn-sm(type="submit") Удалить
+          else
+            tr
+              td(colspan="4" class="text-center") Категории не найдены

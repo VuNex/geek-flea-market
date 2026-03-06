@@ -1,0 +1,70 @@
+extends layout
+
+block content
+  .section-header
+    .header-left
+      h1 Объявления
+      p.text-muted Просмотр, фильтрация и управление объявлениями
+    .header-right
+      - const exportParams = new URLSearchParams(filters).toString()
+      a.btn-secondary(href=`/adverts/export?${exportParams}`) 📥 Экспорт CSV
+
+  .card.filters-card
+    h2 Фильтры
+    form.filters-form(action="/adverts" method="GET")
+      .form-row
+        .form-group
+          label(for="status") Статус
+          select#status.form-control(name="status")
+            option(value="") Все статусы
+            option(value="moderation" selected=filters.status === 'moderation') На модерации
+            option(value="published" selected=filters.status === 'published') Опубликовано
+            option(value="rejected" selected=filters.status === 'rejected') Отклонено
+        
+        .form-group
+          label(for="categoryId") Категория
+          select#categoryId.form-control(name="categoryId")
+            option(value="") Все категории
+            if categories
+              each cat in categories
+                option(value=cat.id selected=String(filters.categoryId) === String(cat.id))= cat.name
+        
+        .form-group
+          label(for="search") Поиск
+          input#search.form-control(type="text" name="search" value=filters.search placeholder="Заголовок или текст...")
+
+      .form-actions
+        button.btn-primary(type="submit") Применить фильтры
+        a.btn-link(href="/adverts") Сбросить
+
+  .section-container
+    .table-responsive
+      table.table.table-hover
+        thead
+          tr
+            th ID
+            th Заголовок
+            th Категория
+            th Статус
+            th Цена
+            th Просмотры
+            th Платная
+        tbody
+          if adverts && adverts.length > 0
+            each ad in adverts
+              tr.clickable-row(onclick=`window.location='/adverts/${ad.id}'`)
+                td= ad.id
+                td.font-bold= ad.title
+                td= ad.category ? ad.category.name : '—'
+                td
+                  span(class=`status-pill status-${ad.status}`)= ad.status
+                td= ad.price.toLocaleString() + ' ₸'
+                td: span.badge.badge-views= ad.views
+                td.text-center
+                  if ad.hasActiveService
+                    span.icon-check ✅
+                  else
+                    span.icon-none —
+          else
+            tr
+              td(colspan="7" class="text-center") Объявления по вашему запросу не найдены
