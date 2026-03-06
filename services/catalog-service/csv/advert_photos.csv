@@ -1,6 +1,6 @@
 id,advertId,url,order
-1,1,https://m.media-amazon.com/images/I/81L8HnL2qKL.jpg,0
-2,2,https://m.media-amazon.com/images/I/91eA0N6XJBL.jpg,0
-3,3,https://m.media-amazon.com/images/I/71uK-m2Y-bL.jpg,0
-4,4,https://m.media-amazon.com/images/I/81Yp6P-QJdL.jpg,0
-5,5,https://m.media-amazon.com/images/I/81VfA5U-zEL.jpg,0
+1,1,https://picsum.photos/800/600?random=1,0
+2,2,https://picsum.photos/800/600?random=2,0
+3,3,https://picsum.photos/800/600?random=3,0
+4,4,https://picsum.photos/800/600?random=4,0
+5,5,https://picsum.photos/800/600?random=5,0
