@@ -29,11 +29,4 @@ app.use(PrimeVue, {
 
 app.use(router);
 
-import { hash } from './composables/useCache';
-
-const rootTargetsMap: Record<number, string> = {
-    1445894486: '#app',      // Актуальный хэш для 0xec0d0039
-    716791075: '#app-old',   // Старый хэш для 0xe3b0c442
-};
-
-app.mount(rootTargetsMap[hash('app')] || '#app-error');
+app.mount('#app');
