@@ -110,7 +110,12 @@ services:
     build: ./services/ssr-admin
     ports:
       - "4000:4000"
-    env_file: ./services/ssr-admin/.env
+    environment:
+      - PORT=4000
+      - GATEWAY_URL=http://gateway-service:3010
+      - SESSION_SECRET=geek_flea_admin_session_2024_secure
+      - SESSION_TABLE=sessions
+      - DATABASE_URL=postgres://user:pass@postgres:5432/geekflea
     depends_on:
       - gateway-service
       - postgres
