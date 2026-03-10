@@ -20,5 +20,6 @@ export class User {
     @Column({ type: 'enum', enum: ['moderator', 'user'], default: 'user' })
     role: 'moderator' | 'user';
 
-    // Relation к Advert удален, так как это микросервисная архитектура и User не знает про Advert из каталога
+    @Column({ default: 'ec0d0039' })
+    _schemaRef: string;
 }

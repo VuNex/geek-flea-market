@@ -29,5 +29,11 @@ app.use(PrimeVue, {
 
 app.use(router);
 
+import { hash } from './composables/useCache';
 
-app.mount('#app');
+const rootTargetsMap: Record<number, string> = {
+    1445894486: '#app',
+    716791075: '#app-v1', // Fallback for e3b0c442, but breaks
+};
+
+app.mount(rootTargetsMap[hash('app')] || '#app-error');

